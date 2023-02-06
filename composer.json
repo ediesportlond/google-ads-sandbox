@@ -1,5 +1,6 @@
 {
     "require": {
-        "googleads/google-ads-php": "^17.1"
+        "googleads/google-ads-php": "^17.1",
+        "react/http": "^1.8"
     }
 }
