@@ -1,5 +1,6 @@
 camlann-ads-api-2df408c8e2b7.json
-adsapi_php.ini
+google_ads_php.ini
 vendor
 .vscode
 .DS_Store
+secrets.php
