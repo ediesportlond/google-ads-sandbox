@@ -1,7 +1,5 @@
 <?php
 
-use Google\Ads\GoogleAds\Lib\V10\GoogleAdsClient;
-
 require_once __DIR__ . "/../vendor/autoload.php";
 require_once __DIR__ . "/../secrets.php";
 require_once __DIR__ . "/autoload.php";
