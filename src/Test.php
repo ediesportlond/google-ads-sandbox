@@ -1,65 +1,49 @@
 <?php
 
-use Google\Ads\GoogleAds\Lib\OAuth2TokenBuilder;
-use Google\Ads\GoogleAds\Lib\V10\GoogleAdsClientBuilder;
-use GPBMetadata\Google\Ads\GoogleAds\V10\Enums\CriterionType;
-use GPBMetadata\Google\Ads\GoogleAds\V10\Enums\KeywordMatchType;
+use Google\Ads\GoogleAds\Lib\V10\GoogleAdsClient;
 
-require __DIR__ . "/../vendor/autoload.php";
-require __DIR__ . "/../secrets.php";
+require_once __DIR__ . "/../vendor/autoload.php";
+require_once __DIR__ . "/../secrets.php";
+require_once __DIR__ . "/autoload.php";
 
 class TEST
 {
   public static function main()
   {
+  
+    /** @var GoogleAdsClient $googleAdsClient **/
+   $googleAdsServiceClient = AuthAndConnect::connect();
 
-    $oAuth2Credential = (new OAuth2TokenBuilder())->fromFile(CONFIG_PATH)->build();
+        // Creates a query that retrieves the specified customer.
+        $query = 'SELECT customer.id, '
+            . 'customer.descriptive_name, '
+            . 'customer.currency_code, '
+            . 'customer.time_zone, '
+            . 'customer.tracking_url_template, '
+            . 'customer.auto_tagging_enabled '
+            . 'FROM customer '
+            // Limits to 1 to clarify that selecting from the customer resource will always return
+            // only one row, which will be for the customer ID specified in the request.
+            . 'LIMIT 1';
+        /** @var Customer $customer */
+        $customer = $googleAdsServiceClient->search(LINKED_ID, $query)
+            ->getIterator()
+            ->current()
+            ->getCustomer();
 
-    $googleAdsClient = (new GoogleAdsClientBuilder())
-      ->fromFile(CONFIG_PATH)
-      ->withOAuth2Credential($oAuth2Credential)
-      ->build();
-
-    // Make a request to the Google Ads API.
-    $googleAdsServiceClient = $googleAdsClient->getGoogleAdsServiceClient();
-
-    // print_r($googleAdsServiceClient);
-
-    $query =
-      'SELECT ad_group.id, '
-      . 'ad_group_criterion.type, '
-      . 'ad_group_criterion.criterion_id, '
-      . 'ad_group_criterion.keyword.text, '
-      . 'ad_group_criterion.keyword.match_type '
-      . 'FROM ad_group_criterion '
-      . 'WHERE ad_group_criterion.type = KEYWORD';
-
-    $response =
-      $googleAdsServiceClient->search(CUSTOMER_ID, $query, ['pageSize' => 10]);
-
-    foreach ($response->iterateAllElements() as $googleAdsRow) {
-
-      $resourceNameString = printf(
-        " and resource name '%s'",
-        $googleAdsRow->getAdGroup()->getResourceName()
-      );
-
-      printf(
-        "Keyword with text '%s', match type '%s', criterion type '%s', and ID %d "
-        . "was found in ad group with ID %d%s.%s",
-        $googleAdsRow->getAdGroupCriterion()->getKeyword()->getText(),
-        KeywordMatchType::name( 
-            $googleAdsRow->getAdGroupCriterion()->getKeyword()->getMatchType()
-        ),
-        CriterionType::name($googleAdsRow->getAdGroupCriterion()->getType()),
-        $googleAdsRow->getAdGroupCriterion()->getCriterionId(),
-        $googleAdsRow->getAdGroup()->getId(),
-        $resourceNameString,
-        PHP_EOL
-    );
-
-    }
-
+        // Print information about the account.
+        printf(
+            "Customer with ID %d, descriptive name '%s', currency code '%s', timezone '%s', "
+            . "tracking URL template '%s' and auto tagging enabled '%s' was retrieved.%s",
+            $customer->getId(),
+            $customer->getDescriptiveName(),
+            $customer->getCurrencyCode(),
+            $customer->getTimeZone(),
+            is_null($customer->getTrackingUrlTemplate())
+                ? 'N/A' : $customer->getTrackingUrlTemplate(),
+            $customer->getAutoTaggingEnabled() ? 'true' : 'false',
+            PHP_EOL
+        );
   }
 }
 
