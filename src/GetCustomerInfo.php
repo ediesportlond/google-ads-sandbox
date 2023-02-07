@@ -1,12 +1,10 @@
 <?php
 
-require_once __DIR__ . "/../../vendor/autoload.php";
-require_once __DIR__ . "/../../secrets.php";
-require_once __DIR__ . "/../autoload.php";
+use Connection\AuthAndConnect;
 
-class Test
+class GetCustomerInfo
 {
-  public static function main()
+  public static function getInfo()
   {
   
     /** @var GoogleAdsClient $googleAdsClient **/
@@ -30,25 +28,19 @@ class Test
             ->getCustomer();
 
         // Print information about the account.
-        printf(
-            '{
-                "customerId":"%d",
-                "descriptiveName":"%s",
-                "currencyCode":"%d",
-                "timezone":"%d",
-                "trackingUrlTemplate": "%s",
-                "autoTagging": %s
-            }%s',
-            $customer->getId(),
-            $customer->getDescriptiveName(),
-            $customer->getCurrencyCode(),
-            $customer->getTimeZone(),
-            is_null($customer->getTrackingUrlTemplate())
+        $resArray = [
+            "customerId" => $customer->getId(),
+            "descriptiveName" => $customer->getDescriptiveName(),
+            "currencyCode" => $customer->getCurrencyCode(),
+            "timezone" => $customer->getTimeZone(),
+            "treackingUrlTemplate" => is_null($customer->getTrackingUrlTemplate())
                 ? 'N/A' : $customer->getTrackingUrlTemplate(),
-            $customer->getAutoTaggingEnabled() ? 'true' : 'false',
-            PHP_EOL
-        );
+            "autoTagging" => $customer->getAutoTaggingEnabled() ? 'true' : 'false',
+        ];
+        
+        header("Content-Type: application/json; charset=UTF-8");
+        echo json_encode($resArray);
+
+        return;
   }
 }
-
-// Test::main();

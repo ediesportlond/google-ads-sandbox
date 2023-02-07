@@ -1,5 +1,7 @@
 <?php
 
+namespace Connection;
+
 use Google\Ads\GoogleAds\Lib\OAuth2TokenBuilder;
 use Google\Ads\GoogleAds\Lib\V12\GoogleAdsClientBuilder;
 
