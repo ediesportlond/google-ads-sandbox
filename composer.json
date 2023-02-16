@@ -1,8 +1,7 @@
 {
     "require": {
         "googleads/google-ads-php": "^17.1",
-        "react/http": "^1.8",
-        "googleads/googleads-php-lib": "^59.0.0"
+        "react/http": "^1.8"
     },
     "repositories": [
         {

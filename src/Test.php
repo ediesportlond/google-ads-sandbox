@@ -1,8 +1,10 @@
 <?php
 
-require_once __DIR__ . "/../../vendor/autoload.php";
-require_once __DIR__ . "/../../secrets.php";
-require_once __DIR__ . "/../autoload.php";
+require_once __DIR__ . "/../vendor/autoload.php";
+require_once __DIR__ . "/../secrets.php";
+require_once __DIR__ . "/autoload.php";
+
+use Connection\AuthAndConnect;
 
 class Test
 {
@@ -51,4 +53,3 @@ class Test
   }
 }
 
-// Test::main();
