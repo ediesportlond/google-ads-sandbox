@@ -2,11 +2,5 @@
     "require": {
         "googleads/google-ads-php": "^17.1",
         "react/http": "^1.8"
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/googleads/googleads-php-lib"
-        }
-    ]
+    }
 }

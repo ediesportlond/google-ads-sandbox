@@ -9,8 +9,8 @@ use React\EventLoop\Loop;
 use React\Http\Message\Response;
 
 //only needed for testing.
-require __DIR__ . "/../vendor/autoload.php";
-require __DIR__ . "/../secrets.php";
+require __DIR__ . "/../../vendor/autoload.php";
+require __DIR__ . "/../../secrets.php";
 
 class GenerateRefreshToken
 {
@@ -50,7 +50,7 @@ class GenerateRefreshToken
       }
 
       // Exit if the state is invalid to prevent request forgery.
-      $state = $request->getQueryParams()['state'];
+      $state = @$request->getQueryParams()['state'];
       if (empty($state) || ($state !== $oauth2->getState())) {
         throw new UnexpectedValueException(
           "The state is empty or doesn't match expected one." . PHP_EOL

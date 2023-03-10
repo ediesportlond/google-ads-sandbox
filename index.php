@@ -5,6 +5,14 @@ require_once __DIR__ . "/vendor/autoload.php";
 require_once __DIR__ . "/secrets.php";
 require_once __DIR__ . "/src/autoload.php";
 
-if(@$_GET["customer"] == 'getInfo'){
+if(@$_GET["getInfo"] == 'customer'){
   GetCustomerInfo::getInfo();
+}
+
+if(@$_GET["getInfo"] == 'keywords'){
+  GetKeywordStats::main();
+}
+
+if(@$_GET["getInfo"] == 'budget'){
+  GetAccountBudgets::main();
 }
