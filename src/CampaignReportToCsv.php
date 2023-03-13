@@ -102,7 +102,7 @@ class CampaignReportToCsv
                 . "metrics.cost_micros "
             . "FROM campaign "
             . "WHERE segments.date DURING LAST_7_DAYS "
-                . "AND campaign.status = 'ENABLED' "
+                . "AND campaign.status != 'ENABLED' "
             . "ORDER BY segments.date DESC";
 
         // Issues a search request by specifying page size.
