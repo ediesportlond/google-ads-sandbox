@@ -1,5 +1,9 @@
 <?php
 
+/*
+  Not functional. Creating video campaigns/ads forbidden through API.
+*/
+
 use Connection\AuthAndConnect;
 
 use Google\Ads\GoogleAds\Lib\V12\GoogleAdsClient;
