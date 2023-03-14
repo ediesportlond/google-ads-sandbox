@@ -157,6 +157,15 @@ class GenerateKeywordIdeas
             ] + $requestOptionalArgs
         );
 
+        echo '<div class="keyword-ideas"><table>
+                <thead>
+                    <tr>
+                        <td>Keywords</td>
+                        <td>Avg Monthly Srch</td>
+                        <td>Competition</td>
+                    </tr>
+                </thead>
+                <tbody>';
         // Iterate over the results and print its detail.
         foreach ($response->iterateAllElements() as $result) {
             /** @var GenerateKeywordIdeaResult $result */
@@ -164,15 +173,20 @@ class GenerateKeywordIdeas
             // For example, a value of 2 will be returned when the competition is 'LOW'.
             // A mapping of enum names to values can be found at KeywordPlanCompetitionLevel.php.
             printf(
-                "<p>Keyword idea text <strong>'%s'</strong> has <strong>%d</strong> average monthly searches and competition as %d.%s</p>",
+                '<tr>
+                    <td>%s</td>
+                    <td>%d</td>
+                    <td>%d<td>
+                </tr>',
                 $result->getText(),
                 is_null($result->getKeywordIdeaMetrics()) ?
                     0 : $result->getKeywordIdeaMetrics()->getAvgMonthlySearches(),
                 is_null($result->getKeywordIdeaMetrics()) ?
-                    0 : $result->getKeywordIdeaMetrics()->getCompetition(),
-                PHP_EOL
+                    0 : $result->getKeywordIdeaMetrics()->getCompetition()
             );
         }
+
+        echo '</tbody></table></div>';
     }
 }
       

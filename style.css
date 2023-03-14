@@ -1,0 +1,30 @@
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+thead {
+  font-weight: bold;
+}
+
+td {
+  padding: 0.5em 1em;
+}
+
+.keyword-form {
+  display:flex;
+  justify-content: space-evenly;
+  width: 80%;
+  margin-bottom: 2em;
+}
+
+.keyword-form input {
+  margin-left: 1em;
+}
+
+.keyword-ideas {
+  height: 500px;
+  overflow: scroll;
+}
