@@ -16,13 +16,15 @@ Include clientId, clientSecret, refreshToken under OAUTH2
 
 <a href="https://github.com/googleads/google-ads-php/blob/main/examples/Authentication/google_ads_php.ini">Template .ini File</a>
 
+Pleace .ini file in src folder.
+
 #### Refresh Token
 
 Refresh token can be generated using command `php src/Connection/GenerateRefreshToken.php` in project root directory.
 
 ### Create a secrets.php file in the project root directory and add the follow values:
 
-`define("CONFIG_PATH", "");` Path to config file<br>
+`define("CONFIG_PATH", __DIR__ . '/src/google_ads_php.ini');` Path to config file<br>
 `define("CUSTOMER_ID", "");` Manager Account Customer Id<br>
 `define("LINKED_ID", "");`  Client Account Customer Id<br>
 

@@ -60,7 +60,7 @@ class GenerateKeywordIdeas
         try {
             self::runExample(
                 $googleAdsClient,
-                self::CUSTOMER_ID,
+                (int)self::CUSTOMER_ID,
                 [self::LOCATION_ID_1, self::LOCATION_ID_2],
                 self::LANGUAGE_ID,
                 // [self::KEYWORD_TEXT_1, self::KEYWORD_TEXT_2],
