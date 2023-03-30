@@ -37,14 +37,14 @@ use Google\ApiCore\ApiException;
 class GetAccountBudgets
 {
 
-  public static function main()
+  public static function getBudgets()
   {
 
     /** @var GoogleAdsClient $googleAdsClient **/
     $googleAdsClient = AuthAndConnect::getClient();
 
     try {
-      self::runExample(
+      return self::runExample(
         $googleAdsClient,
         CUSTOMER_ID
       );
@@ -105,55 +105,90 @@ class GetAccountBudgets
     $stream = $googleAdsServiceClient->searchStream($customerId, $query);
     /** @var GoogleAdsServerStreamDecorator $stream */
 
+    $data = [];
     // Iterates over all rows in all pages and prints the requested field values for
     // the account budget in each row.
     foreach ($stream->iterateAllElements() as $googleAdsRow) {
       /** @var GoogleAdsRow $googleAdsRow */
       $accountBudget = $googleAdsRow->getAccountBudget();
-      printf(
-        'Found the account budget \'%s\' with status \'%s\', billing setup '
-          . '\'%s\', amount served %.2f, total adjustments %.2f,%s'
-          . '  approved spending limit \'%s\' (proposed \'%s\', adjusted \'%s\'),%s'
-          . '  approved start time \'%s\' (proposed \'%s\'),%s'
-          . '  approved end time \'%s\' (proposed \'%s\').%s',
-        $accountBudget->getResourceName(),
-        AccountBudgetStatus::name($accountBudget->getStatus()),
-        $accountBudget->getBillingSetup()
+
+      $resourceName = $accountBudget->getResourceName();
+
+      $data[$resourceName] = [
+        "status" => AccountBudgetStatus::name($accountBudget->getStatus()),
+        "billing_setup" => $accountBudget->getBillingSetup()
           ? $accountBudget->getBillingSetup() : 'none',
-        Helper::microToBase($accountBudget->getAmountServedMicros()),
-        Helper::microToBase($accountBudget->getTotalAdjustmentsMicros()),
-        PHP_EOL,
-        $accountBudget->getApprovedSpendingLimitMicros()
-          ? sprintf(
-            '%.2f',
-            Helper::microToBase($accountBudget->getApprovedSpendingLimitMicros())
-          ) : SpendingLimitType::name($accountBudget->getApprovedSpendingLimitType()),
-        $accountBudget->getProposedSpendingLimitMicros()
-          ? sprintf(
-            '%.2f',
-            Helper::microToBase($accountBudget->getProposedSpendingLimitMicros())
-          ) : SpendingLimitType::name($accountBudget->getProposedSpendingLimitType()),
-        $accountBudget->getAdjustedSpendingLimitMicros()
-          ? sprintf(
-            '%.2f',
-            Helper::microToBase($accountBudget->getAdjustedSpendingLimitMicros())
-          ) : SpendingLimitType::name($accountBudget->getAdjustedSpendingLimitType()),
-        PHP_EOL,
-        $accountBudget->getApprovedStartDateTime()
+        "amount_served_micros" => $accountBudget->getAmountServedMicros(),
+        "total_adjustments_micros" => $accountBudget->getTotalAdjustmentsMicros(),
+        "approved_spending_limit_micros" => $accountBudget->getApprovedSpendingLimitMicros()
+          ? $accountBudget->getApprovedSpendingLimitMicros()
+          : SpendingLimitType::name($accountBudget->getApprovedSpendingLimitType()),
+        "proposed_spending_limit_micros" => $accountBudget->getProposedSpendingLimitMicros()
+          ? $accountBudget->getProposedSpendingLimitMicros()
+          : SpendingLimitType::name($accountBudget->getProposedSpendingLimitType()),
+        "adjusted_spending_limit_micros" => $accountBudget->getAdjustedSpendingLimitMicros()
+          ? $accountBudget->getAdjustedSpendingLimitMicros()
+          : SpendingLimitType::name($accountBudget->getAdjustedSpendingLimitType()),
+        "approved_start_datetime" => $accountBudget->getApprovedStartDateTime()
           ? $accountBudget->getApprovedStartDateTime()
           : 'none',
-        $accountBudget->getProposedStartDateTime()
+        "prposed_start_datetime" => $accountBudget->getProposedStartDateTime()
           ? $accountBudget->getProposedStartDateTime()
           : 'none',
-        PHP_EOL,
-        $accountBudget->getApprovedEndDateTime()
+        "approved_end_datetime" => $accountBudget->getApprovedEndDateTime()
           ? $accountBudget->getApprovedEndDateTime()
           : TimeType::name($accountBudget->getApprovedEndTimeType()),
-        $accountBudget->getProposedEndDateTime()
+        "proposed_end_datetime" => $accountBudget->getProposedEndDateTime()
           ? $accountBudget->getProposedEndDateTime()
           : TimeType::name($accountBudget->getProposedEndTimeType()),
-        PHP_EOL
-      );
+      ];
+
+      // printf(
+      //   'Found the account budget \'%s\' with status \'%s\', billing setup '
+      //     . '\'%s\', amount served %.2f, total adjustments %.2f,%s'
+      //     . '  approved spending limit \'%s\' (proposed \'%s\', adjusted \'%s\'),%s'
+      //     . '  approved start time \'%s\' (proposed \'%s\'),%s'
+      //     . '  approved end time \'%s\' (proposed \'%s\').%s',
+      //   $accountBudget->getResourceName(),
+      //   AccountBudgetStatus::name($accountBudget->getStatus()),
+      //   $accountBudget->getBillingSetup()
+      //     ? $accountBudget->getBillingSetup() : 'none',
+      //   Helper::microToBase($accountBudget->getAmountServedMicros()),
+      //   Helper::microToBase($accountBudget->getTotalAdjustmentsMicros()),
+      //   PHP_EOL,
+      //   $accountBudget->getApprovedSpendingLimitMicros()
+      //     ? sprintf(
+      //       '%.2f',
+      //       Helper::microToBase($accountBudget->getApprovedSpendingLimitMicros())
+      //     ) : SpendingLimitType::name($accountBudget->getApprovedSpendingLimitType()),
+      //   $accountBudget->getProposedSpendingLimitMicros()
+      //     ? sprintf(
+      //       '%.2f',
+      //       Helper::microToBase($accountBudget->getProposedSpendingLimitMicros())
+      //     ) : SpendingLimitType::name($accountBudget->getProposedSpendingLimitType()),
+      //   $accountBudget->getAdjustedSpendingLimitMicros()
+      //     ? sprintf(
+      //       '%.2f',
+      //       Helper::microToBase($accountBudget->getAdjustedSpendingLimitMicros())
+      //     ) : SpendingLimitType::name($accountBudget->getAdjustedSpendingLimitType()),
+      //   PHP_EOL,
+      //   $accountBudget->getApprovedStartDateTime()
+      //     ? $accountBudget->getApprovedStartDateTime()
+      //     : 'none',
+      //   $accountBudget->getProposedStartDateTime()
+      //     ? $accountBudget->getProposedStartDateTime()
+      //     : 'none',
+      //   PHP_EOL,
+      //   $accountBudget->getApprovedEndDateTime()
+      //     ? $accountBudget->getApprovedEndDateTime()
+      //     : TimeType::name($accountBudget->getApprovedEndTimeType()),
+      //   $accountBudget->getProposedEndDateTime()
+      //     ? $accountBudget->getProposedEndDateTime()
+      //     : TimeType::name($accountBudget->getProposedEndTimeType()),
+      //   PHP_EOL
+      // );
     }
+
+    return $data;
   }
 }

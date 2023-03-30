@@ -35,14 +35,14 @@ use Google\ApiCore\ApiException;
 class GetKeywordStats
 {
 
-  public static function main()
+  public static function getStats()
   {
 
     /** @var GoogleAdsClient $googleAdsClient **/
     $googleAdsClient = AuthAndConnect::getClient();
 
     try {
-      self::runExample(
+      return self::runExample(
         $googleAdsClient,
         LINKED_ID
       );
@@ -109,6 +109,7 @@ class GetKeywordStats
     $stream =
       $googleAdsServiceClient->searchStream($customerId, $query);
 
+    $data =[];
     // Iterates over all rows in all messages and prints the requested field values for
     // the keyword in each row.
     foreach ($stream->iterateAllElements() as $googleAdsRow) {
@@ -117,31 +118,55 @@ class GetKeywordStats
       $adGroup = $googleAdsRow->getAdGroup();
       $adGroupCriterion = $googleAdsRow->getAdGroupCriterion();
       $metrics = $googleAdsRow->getMetrics();
-      printf(
-        "Keyword text '%s' with "
-          . "match type %s "
-          . "and ID %d "
-          . "in ad group '%s' "
-          . "with ID %d "
-          . "in campaign '%s' "
-          . "with ID %d "
-          . "had %d impression(s), "
-          . "%d click(s), "
-          . "and %d cost (in micros) "
-          . "during the last 7 days.%s",
-        $adGroupCriterion->getKeyword()->getText(),
-        KeywordMatchType::name($adGroupCriterion->getKeyword()->getMatchType()),
-        $adGroupCriterion->getCriterionId(),
-        $adGroup->getName(),
-        $adGroup->getId(),
-        $campaign->getName(),
-        $campaign->getId(),
-        $metrics->getImpressions(),
-        $metrics->getClicks(),
-        $metrics->getCostMicros(),
-        PHP_EOL
-      );
+
+      $keyword = $adGroupCriterion->getKeyword()->getText();
+      $data[$keyword] = [
+        "match_type" => [
+          "type" => KeywordMatchType::name($adGroupCriterion->getKeyword()->getMatchType()),
+          "id" => $adGroupCriterion->getCriterionId(),
+        ],
+        "ad_group" => [
+          "name" => $adGroup->getName(),
+          "id" => $adGroup->getId()
+        ],
+        "campaign" => [
+          "name" => $campaign->getName(),
+          "id" => $campaign->getId(),
+        ],
+        "metrics" => [
+          "impressions" => $metrics->getImpressions(),
+          "clicks" => $metrics->getClicks(),
+          "cost_micros" => $metrics->getCostMicros(),
+        ]
+      ];
+
+      // printf(
+      //   "Keyword text '%s' with "
+      //     . "match type %s "
+      //     . "and ID %d "
+      //     . "in ad group '%s' "
+      //     . "with ID %d "
+      //     . "in campaign '%s' "
+      //     . "with ID %d "
+      //     . "had %d impression(s), "
+      //     . "%d click(s), "
+      //     . "and %d cost (in micros) "
+      //     . "during the last 7 days.%s",
+      //   $adGroupCriterion->getKeyword()->getText(),
+      //   KeywordMatchType::name($adGroupCriterion->getKeyword()->getMatchType()),
+      //   $adGroupCriterion->getCriterionId(),
+      //   $adGroup->getName(),
+      //   $adGroup->getId(),
+      //   $campaign->getName(),
+      //   $campaign->getId(),
+      //   $metrics->getImpressions(),
+      //   $metrics->getClicks(),
+      //   $metrics->getCostMicros(),
+      //   PHP_EOL
+      // );
     }
+
+    return $data;
   }
   // [END get_keyword_stats]
 }

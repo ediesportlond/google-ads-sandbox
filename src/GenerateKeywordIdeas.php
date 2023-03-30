@@ -52,13 +52,13 @@ class GenerateKeywordIdeas
     // Optional: Specify a URL string related to your business to generate ideas.
     private const PAGE_URL = null;
 
-    public static function main(String $keyword, String $keyword2)
+    public static function getKeywords(String $keyword, String $keyword2)
     {
 
         $googleAdsClient = AuthAndConnect::getClient();
 
         try {
-            self::runExample(
+            return self::runExample(
                 $googleAdsClient,
                 (int)self::CUSTOMER_ID,
                 [self::LOCATION_ID_1, self::LOCATION_ID_2],
@@ -157,36 +157,20 @@ class GenerateKeywordIdeas
             ] + $requestOptionalArgs
         );
 
-        echo '<div class="keyword-ideas"><table>
-                <thead>
-                    <tr>
-                        <td>Keywords</td>
-                        <td>Avg Monthly Srch</td>
-                        <td>Competition</td>
-                    </tr>
-                </thead>
-                <tbody>';
+        $data = [];
         // Iterate over the results and print its detail.
         foreach ($response->iterateAllElements() as $result) {
             /** @var GenerateKeywordIdeaResult $result */
             // Note that the competition printed below is enum value.
             // For example, a value of 2 will be returned when the competition is 'LOW'.
             // A mapping of enum names to values can be found at KeywordPlanCompetitionLevel.php.
-            printf(
-                '<tr>
-                    <td>%s</td>
-                    <td>%d</td>
-                    <td>%d<td>
-                </tr>',
-                $result->getText(),
-                is_null($result->getKeywordIdeaMetrics()) ?
-                    0 : $result->getKeywordIdeaMetrics()->getAvgMonthlySearches(),
-                is_null($result->getKeywordIdeaMetrics()) ?
-                    0 : $result->getKeywordIdeaMetrics()->getCompetition()
-            );
+   
+            $keyword = $result->getText();
+            $data[$keyword]["average"] = is_null($result->getKeywordIdeaMetrics()) ? 0 : $result->getKeywordIdeaMetrics()->getAvgMonthlySearches();
+            $data[$keyword]["competition"] = is_null($result->getKeywordIdeaMetrics()) ? 0 : $result->getKeywordIdeaMetrics()->getCompetition();
         }
 
-        echo '</tbody></table></div>';
+        return $data;
     }
 }
       

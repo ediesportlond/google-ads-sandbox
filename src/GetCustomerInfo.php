@@ -39,8 +39,8 @@ class GetCustomerInfo
         ];
         
         // header("Content-Type: application/json; charset=UTF-8");
-        echo json_encode($resArray);
+        // echo json_encode($resArray);
 
-        return;
+        return $resArray;
   }
 }
