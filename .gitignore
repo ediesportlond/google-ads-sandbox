@@ -5,4 +5,5 @@ vendor
 .vscode
 .DS_Store
 secrets.php
-client_secret.json
+client_secret_test.json
+client_secret_prod.json
