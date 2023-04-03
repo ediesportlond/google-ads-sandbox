@@ -1,6 +1,9 @@
 # API DOCUMENTATION
 
 Get metrics and manage campaigns using PHP Google Ads Library.
+
+Will return data in JSON.
+
 <a href="https://github.com/googleads/google-ads-php">Source GitHub</a>
 
 ## Getting Started
@@ -28,24 +31,36 @@ Refresh token can be generated using command `php src/Connection/GenerateRefresh
 `define("CUSTOMER_ID", "");` Manager Account Customer Id<br>
 `define("LINKED_ID", "");`  Client Account Customer Id<br>
 
-## Endpoints
+## Params
 
-### GET
-
-#### getInfo
-
-`customer` Prints basic customer info. 
-
-`budget` Prints information on account budgets.
-
-#### getStats
-
-`keywords` Prints stats on keywords.
-
-#### keywords
-
-Prints table with keyword suggestions and average monthly searches. 
-
-`keywords=1` Required param<br>
-`keywordOne` First keyword<br>
-`keywordTwo` Second keyword<br>
+<table>
+  <thead>
+    <tr>
+      <th>Param</th>
+      <th>Value</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>customer</td>
+      <td>getInfo</td>
+      <td>Returns basic info for client account.</td>
+    </tr>
+    <tr>
+      <td>keywords</td>
+      <td>getKeywords</td>
+      <td>Generates keyword ideas based on the provided seed keywords.</td>
+    </tr>
+    <tr>
+      <td>keywords</td>
+      <td>getStats</td>
+      <td>Retrieves statistics for the keywords in the account.</td>
+    </tr>
+    <tr>
+      <td>customer</td>
+      <td>getInfo</td>
+      <td>Retrieves the budgets for the account.</td>
+    </tr>
+  </tbody>
+</table>
